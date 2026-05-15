@@ -24,7 +24,7 @@ renderProfile();
     // --- НОВОЕ: Обработка ответа от Google ---
     window.handleCredentialResponse = async (response) => {
         try {
-            const res = await fetch('https://ticket-search-bakend.onrender.com//auth/google', {
+            const res = await fetch('https://ticket-search-bakend.onrender.com/auth/google', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: response.credential })
