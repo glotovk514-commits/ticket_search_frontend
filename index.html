@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Search</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="auto.css">
+    <script src="index.js"></script>
+    <script src="auto.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/ru.js"></script>
+</head>
+<body>
+
+
+
+<header class="header">
+    <div class="container">
+        <div class="logo">
+            <a href="index.html">
+                <h1>Ticket Search</h1>
+                <p>Поиск и бронирование билетов на поезд</p>
+            </a>
+        </div>
+        <nav class="nav">
+            <ul>
+                <li><a href="seacrh.html">Поиск билетов</a></li>
+                <li><a href="novostu.html">Новости</a></li>
+                <li><a href="o_nas.html">О нас</a></li>
+                <li><a href="support.html" >Поддержка</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons" id="authBlock">
+            <button class="btn-login" id="loginBtn">Войти</button>
+            <button class="btn-register" id="regBtn">Регистрация</button>
+        </div>
+    </div>
+</header>
+
+<section class="search-section">
+    <div class="container">
+        <h1>Поиск ж/д билетов</h1>
+        <div class="search-form">
+            
+            <!-- Контейнер для полей "Откуда" и "Куда" с кнопкой между ними -->
+            <div class="location-fields">
+                <div class="form-group" style="position: relative;">
+                    <label>Откуда</label>
+                    <input type="text" id="fromCity" placeholder="Город или станция" autocomplete="off">
+                    <div id="from-suggestions" class="suggestions-container"></div>
+                </div>
+                
+                <button type="button" id="swapCities" class="swap-btn" title="Поменять местами">⇄</button>
+                
+                <div class="form-group" style="position: relative;">
+                    <label>Куда</label>
+                    <input type="text" id="toCity" placeholder="Город или станция" autocomplete="off">
+                    <div id="to-suggestions" class="suggestions-container"></div>
+                </div>
+            </div>
+            <div class="form-group date-group">
+                <label>Дата</label>
+                <input type="date" id="travelDate" class="date-input">
+            </div>
+            
+            <button onclick="saveAndRedirect()" class="search-btn">Найти билеты</button>
+        </div>
+    </div>
+</section>
+
+
+<section class="features">
+    <div class="container">
+        <h2>Почему выбирают Ticket Search?</h2>
+        <div class="features-grid">
+            <div class="feature">
+                <i class="fas fa-percent"></i>
+                <h3>Скидки и акции</h3>
+                <p>Постоянные скидки и специальные предложения</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>Мобильное приложение</h3>
+                <p>Удобный поиск и покупка билетов с телефона</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Безопасная оплата</h3>
+                <p>Защищенные платежи банковскими картами</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-headset"></i>
+                <h3>Поддержка 24/7</h3>
+                <p>Круглосуточная помощь нашим клиентам</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="popular-routes">
+    <div class="container">
+        <h2>Популярные направления</h2>
+        <div class="routes-grid">
+            <div class="route-card">
+                <h3>Москва - Санкт-Петербург</h3>
+                <p>от 1 200 ₽</p>
+                <button class="btn-route select-popular" data-from="Москва" data-to="Санкт-Петербург">Выбрать</button>
+            </div>
+            <div class="route-card">
+                <h3>Москва - Нижний Новгород</h3>
+                <p>от 900 ₽</p>
+                <button class="btn-route select-popular" data-from="Москва" data-to="Нижний Новгород">Выбрать</button>
+            </div>
+            <div class="route-card">
+                <h3>Москва - Казань</h3>
+                <p>от 1 500 ₽</p>
+                <button class="btn-route select-popular" data-from="Москва" data-to="Казань">Выбрать</button>
+            </div>
+            <div class="route-card">
+                <h3>Москва - Сочи</h3>
+                <p>от 2 800 ₽</p>
+                <button class="btn-route select-popular" data-from="Москва" data-to="Сочи">Выбрать</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="faq-section">
+    <div class="container">
+        <h2>Частые вопросы о ж/д билетах</h2>
+        <div class="faq-list">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Как купить жд билет?</span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Для покупки билета заполните форму поиска выше, выберите подходящий рейс и следуйте инструкциям системы оплаты.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Как вернуть (сдать) билеты?</span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Возврат билетов возможен через личный кабинет или обратившись в службу поддержки. Сумма возврата зависит от времени до отправления поезда.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Что нужно, чтобы сесть в поезд?</span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Для посадки необходим документ, удостоверяющий личность (паспорт), и электронный или бумажный билет.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Как перевезти животное в поезде?</span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Перевозка животных возможна при наличии специального билета и переноски. Уточняйте условия для вашего маршрута.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Что такое электронный билет?</span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Электронный билет — это цифровая версия билета, которая приходит на email. Его можно предъявить с телефона или распечатать.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Как поменять билет?</span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Изменение билета возможно через личный кабинет или службу поддержки. Может взиматься сервисный сбор.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Что делать, если ошибся при вводе данных пассажира?</span>
+                    <button class="faq-toggle">+</button>
+                </div>
+                <div class="faq-answer">
+                    <p>Немедленно обратитесь в службу поддержки. Исправление данных возможно в течение ограниченного времени после покупки.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TicketSearch</h3>
+                    <p>Лучший сервис для поиска и покупки ж/д билетов</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TicketSearch. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+
+
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="modalTitle">Вход</h2>
+        <form id="authForm">
+            <div id="regFields" style="display: none;">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="text" id="authName" placeholder="Имя" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="text" id="authLastName" placeholder="Фамилия" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 15px;">
+                <input type="email" id="authEmail" placeholder="Email" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <input type="password" id="authPassword" placeholder="Пароль" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+            </div>
+            
+            <button type="submit" class="search-btn" id="submitAuth" style="width: 100%;">Войти</button>
+            <div id="googleBtnContainer" style="display: none; margin-top: 15px; justify-content: center;"></div>
+        </form>
+        <p id="toggleAuth" style="text-align: center; margin-top: 15px; cursor: pointer; color: #1a237e; text-decoration: underline;">
+            Нет аккаунта? Зарегистрироваться
+        </p>
+        
+    </div>
+</div>
+
+</body>
+</html>
+
+
+

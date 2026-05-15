@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Ticket Search Админ Центр | Центральная панель</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        /* Tailwind overrides for blue theme */
+        .bg-background { background-color: #f9f9ff; }
+        .text-on-surface { color: #191c20; }
+        .bg-primary { background-color: #1a3b8e; }
+        .text-primary { color: #1a3b8e; }
+        .border-outline-variant { border-color: #c4c6d0; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR как в вашем code.html -->
+    <aside class="sidebar fixed left-0 top-0 h-screen w-64 flex flex-col z-50">
+        <div class="px-5 pt-6 pb-4 border-b border-outline-variant">
+            <div class="flex items-center gap-2">
+                <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-white text-xl">train</span>
+                </div>
+                <div>
+                    <h2 class="display-lg text-[20px] leading-tight font-black text-primary tracking-tight">Ticket Search Админ</h2>
+                
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+            <div class="label-caps text-secondary px-2 pb-1">Основная навигация</div>
+            <button data-page="dashboard" class="sidebar-nav-item w-full flex items-center gap-3">
+                <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                <span class="body-base text-[15px] font-medium">Панель продаж</span>
+            </button>
+            <button data-page="users" class="sidebar-nav-item w-full flex items-center gap-3">
+                <span class="material-symbols-outlined text-[22px]">group</span>
+                <span class="body-base text-[15px] font-medium">Справочник пользователей</span>
+            </button>
+            <button data-page="news" class="sidebar-nav-item w-full flex items-center gap-3">
+                <span class="material-symbols-outlined text-[22px]">newspaper</span>
+                <span class="body-base text-[15px] font-medium">Редактор новостей</span>
+            </button>
+            <button data-page="loyalty" class="sidebar-nav-item w-full flex items-center gap-3">
+                <span class="material-symbols-outlined text-[22px]">loyalty</span>
+                <span class="body-base text-[15px] font-medium">Программа лояльности</span>
+            </button>
+        </nav>
+
+    
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="ml-64 min-h-screen flex flex-col">
+        <!-- TOP NAVBAR как в вашем code.html -->
+        <header class="sticky top-0 z-30 bg-surface border-b border-outline-variant px-6 h-16 flex justify-between items-center shadow-card">
+            
+            <div class="flex items-center gap-4">
+                
+                <div class="flex items-center gap-2 pl-2 border-l border-outline-variant">
+                    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb_VgePzLl5b0EkauJ8wHWPwgOzVd4tefHyyNwi_NXKcwvJGQoEZyMS_YBCFimoXN-fbOuR-Ae0-jWvhFaOP2jbV4HYqh7uXy00yCV_EsVhaqYR4OFGdIGV7CzPFvqFQZOZ4a8SYvFLrBeAQxns_vkG2r8IXb9r1uofl3M5LbmMR10cP4sbDp1ga0w8ZV-epZCzB9jveXYBYRwgehz7b2z4K2pTTNdjTpx5Cx0JY5CEzqAt2B7AOl7rSAJhUIZOT8ddFfr2UcqQaUK" alt="admin avatar" class="w-8 h-8 rounded-full border border-outline-variant object-cover">
+                    <div class="hidden lg:block text-left">
+                        <p class="text-sm font-semibold leading-tight">Администратор</p>
+                        <p class="label-caps text-secondary text-[10px]">Главный админ</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- DYNAMIC PAGES -->
+        <div id="app-root" class="p-6 overflow-y-auto page-transition"></div>
+    </main>
+
+    <!-- FLOATING ACTION BUTTON -->
+    <button id="fabButton" class="fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-modal flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
+        <span class="material-symbols-outlined text-[28px] text-white">add</span>
+    </button>
+
+    <script src="admin.js"></script>
+</body>
+</html>

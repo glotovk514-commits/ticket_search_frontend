@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Новости железной дороги</title>
+    <link rel="stylesheet" href="novostu.css">
+    <link rel="stylesheet" href="auto.css">
+    <style>
+        /* ========== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ СПИННЕРА ========== */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 20px;
+            text-align: center;
+            grid-column: 1 / -1;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid #1a237e;
+            border-right: 4px solid #283593;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 18px;
+            color: #1a237e;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            background: #1a237e;
+            border-radius: 50%;
+            animation: bounce 1.4s ease-in-out infinite;
+        }
+
+        .loading-dots span:nth-child(1) { animation-delay: 0s; }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-12px);
+                opacity: 1;
+            }
+        }
+    </style>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body>
+    <!-- Шапка -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">
+                    <h1>Ticket Search</h1>
+                    <p>Поиск и бронирование билетов на поезд</p>
+                </a>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Главная страница</a></li>
+                    <li><a href="seacrh.html">Поиск билетов</a></li>
+                    <li><a href="o_nas.html">О нас</a></li>
+                    <li><a href="support.html">Поддержка</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons" id="authBlock">
+                <button class="btn-login" id="loginBtn">Войти</button>
+                <button class="btn-register" id="regBtn">Регистрация</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main>
+        <!-- Последние новости -->
+        <section class="latest-news">
+            <div class="container">
+                <div class="news-header">
+                    <h2 class="section-title">Последние новости</h2>
+                </div>
+                <div class="news-grid" id="newsContainer">
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Загрузка новостей</div>
+                        <div class="loading-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div class="loading-subtext">Пожалуйста, подождите...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TicketSearch</h3>
+                    <p>Лучший сервис для поиска и покупки ж/д билетов</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 TicketSearch. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalTitle">Вход</h2>
+            <form id="authForm">
+                <div id="regFields" style="display: none;">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <input type="text" id="authName" placeholder="Имя" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <input type="text" id="authLastName" placeholder="Фамилия" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="email" id="authEmail" placeholder="Email" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <input type="password" id="authPassword" placeholder="Пароль" required style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                
+                <button type="submit" class="search-btn" id="submitAuth" style="width: 100%;">Войти</button>
+                <div id="googleBtnContainer" style="display: none; margin-top: 15px; justify-content: center;"></div>
+            </form>
+            <p id="toggleAuth" style="text-align: center; margin-top: 15px; cursor: pointer; color: #1a237e; text-decoration: underline;">
+                Нет аккаунта? Зарегистрироваться
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Функция экранирования HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        // Функция загрузки новостей
+        function loadNews() {
+            // Получаем новости из localStorage
+            let news = JSON.parse(localStorage.getItem('newsData')) || 
+                      JSON.parse(localStorage.getItem('admin_news_list')) || [];
+            
+            // Если новостей нет, берем дефолтные
+            if (news.length === 0) {
+                news = [
+                    { id: 1, title: 'Сергей Собянин рассказал, каким станет Ленинградский вокзал после модернизации', content: 'Историческую часть здания вокзала сохранят и отремонтируют. Ключевые изменения коснутся внутреннего пространства — вокзал станет современным и удобным для всех категорий пассажиров.', date: '2026-03-10' },
+                    { id: 2, title: 'Запуск новых двухэтажных поездов', content: 'Комфорт и скорость для пассажиров дальнего следования.', date: '2026-03-15' }
+                ];
+            }
+            
+            // Сортируем по дате (новые сверху)
+            news.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            const newsContainer = document.getElementById('newsContainer');
+            
+            // Отображаем новости
+            newsContainer.innerHTML = news.map(item => `
+                <div class="news-card">
+                    <div class="news-image">
+                        <img src="https://www.mos.ru/upload/newsfeed/news/8ccd1ba7b2507c18ed227866858c3218/B-1UgQMx6uBd.jpg" alt="${escapeHtml(item.title)}">
+                    </div>
+                    <div class="news-content">
+                        <div class="news-date">${item.date}</div>
+                        <h3 class="news-title">${escapeHtml(item.title)}</h3>
+                        <p class="news-preview">${escapeHtml(item.content.substring(0, 100))}${item.content.length > 100 ? '...' : ''}</p>
+                        <a href="#" class="read-more" data-id="${item.id}">Читать далее →</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Ждем полной загрузки DOM, затем показываем спиннер на короткое время и грузим новости
+        document.addEventListener('DOMContentLoaded', function() {
+            // Спиннер уже отображается в HTML (встроен в #newsContainer)
+            // Небольшая задержка, чтобы спиннер покрутился
+            setTimeout(loadNews, 800);
+        });
+    </script>
+    <script src="auto.js"></script>
+    <script src="novostu.js"></script>
+</body>
+</html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Безопасная оплата | Ticket Search — оформление билета</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Шапка в стиле сайта */
+        .header {
+            background-color: #1a237e;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .logo a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .secure-badge-header {
+            background: rgba(255,255,255,0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .secure-badge-header i {
+            font-size: 0.9rem;
+        }
+
+        /* Основной контент */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 15px;
+        }
+
+        /* Карточки */
+        .payment-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .payment-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .card-header h2 {
+            color: #1a237e;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-header p {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        /* Методы оплаты */
+        .methods-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .method-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.25s ease;
+            background: white;
+        }
+
+        .method-card:hover {
+            border-color: #1a237e;
+            background: #f8f9ff;
+        }
+
+        .method-card.active {
+            border-color: #1a237e;
+            background: linear-gradient(105deg, #f8f9ff 0%, #f0f2ff 100%);
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.1);
+        }
+
+        .method-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .method-card .method-icon:first-child {
+            background: #e8eaf6;
+            color: #1a237e;
+        }
+
+        .method-card.active .method-icon:first-child {
+            background: #1a237e;
+            color: white;
+        }
+
+        .method-info p:first-child {
+            font-weight: 700;
+            color: #1a237e;
+            margin-bottom: 0.2rem;
+        }
+
+        .method-info p:last-child {
+            font-size: 0.7rem;
+            color: #999;
+        }
+
+        /* Форма */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #1a237e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-fancy {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: white;
+            font-family: monospace;
+        }
+
+        .input-fancy:focus {
+            border-color: #1a237e;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+            outline: none;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper i:first-child {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .input-wrapper .input-fancy {
+            padding-left: 2.5rem;
+        }
+
+        .card-icons {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 0.25rem;
+            color: #ccc;
+        }
+
+        .row-2cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Кнопка оплаты */
+        .pay-button {
+            width: 100%;
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 1.25rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .pay-button:hover:not(:disabled) {
+            background: #303f9f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 35, 126, 0.3);
+        }
+
+        .pay-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Блок СБП */
+        .sbp-block {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .qr-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+
+        .qr-container img {
+            width: 160px;
+            height: 160px;
+            display: block;
+        }
+
+        .sbp-info {
+            background: #e8eaf6;
+            border-radius: 12px;
+            padding: 0.75rem;
+            max-width: 280px;
+            margin: 1rem auto;
+        }
+
+        .sbp-info p {
+            font-size: 0.75rem;
+            color: #1a237e;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .confirm-btn:hover {
+            background: #303f9f;
+            transform: translateY(-2px);
+        }
+
+        /* Блок доверия */
+        .trust-badge {
+            display: flex;
+            justify-content: space-between;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .trust-badge span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Правая колонка - заказ */
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+            overflow: hidden;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .order-header {
+            background: #1a237e;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .order-header p {
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .order-body {
+            padding: 1.5rem;
+        }
+
+        .order-total {
+            background: linear-gradient(135deg, #e8eaf6 0%, #f5f7ff 100%);
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        .order-total span:first-child {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1a237e;
+            text-transform: uppercase;
+        }
+
+        .total-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1a237e;
+        }
+
+        /* Детали заказа */
+        .order-detail-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+
+        .order-detail-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #1a237e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .order-detail-value {
+            font-weight: 700;
+            color: #333;
+            font-size: 0.95rem;
+        }
+
+        .route-badge {
+            background: #e8eaf6;
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #1a237e;
+        }
+
+        .grid-2cols-order {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin: 0.75rem 0;
+        }
+
+        .info-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        .info-box .label {
+            font-size: 0.6rem;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .info-box .value {
+            font-weight: 700;
+            color: #1a237e;
+            font-size: 0.9rem;
+        }
+
+        /* Скрытые элементы */
+        .hidden {
+            display: none;
+        }
+
+        /* Анимация */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .fa-spin-custom {
+            animation: spin 1s linear infinite;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 992px) {
+            .main-content {
+                padding: 0 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .methods-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .row-2cols {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .card-header {
+                padding: 1rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Шапка в стиле основного сайта -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><a href="index.html">Ticket Search</a></h1>
+                <p>железнодорожные билеты онлайн</p>
+            </div>
+            <div class="secure-badge-header">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure Checkout • 3D Secure</span>
+                <i class="fas fa-lock"></i>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Левая колонка — форма оплаты -->
+            <div>
+                <div class="payment-card">
+                    <div class="card-header">
+                        <h2>💳 Способ оплаты</h2>
+                        <p>Все данные защищены SSL-шифрованием</p>
+                    </div>
+                    
+                    <div class="card-body">
+                        <!-- кнопки переключения методов -->
+                        <div class="methods-grid">
+                            <div onclick="switchMethod('card')" id="btn-card" class="method-card active">
+                                <div class="method-icon" style="background: #e8eaf6; color: #1a237e;">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="method-info">
+                                    <p>Банковская карта</p>
+                                    <p>Visa, Mastercard, МИР, JCB</p>
+                                </div>
+                            </div>
+                            <div onclick="switchMethod('sbp')" id="btn-sbp" class="method-card">
+                                <div class="method-icon" style="background: #e8eaf6; color: #1a237e;">
+                                    <i class="fas fa-qrcode"></i>
+                                </div>
+                                <div class="method-info">
+                                    <p>СБП</p>
+                                    <p>Система быстрых платежей</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Форма для карты -->
+                        <form id="card-form" class="space-y-6">
+                            <div class="form-group">
+                                <label>Номер карты</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-credit-card"></i>
+                                    <input type="text" id="card-num" required placeholder="0000 0000 0000 0000" class="input-fancy" style="padding-left: 2.5rem;">
+                                    <div class="card-icons">
+                                        <i class="fab fa-cc-visa"></i>
+                                        <i class="fab fa-cc-mastercard"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row-2cols">
+                                <div class="form-group">
+                                    <label>Срок действия</label>
+                                    <input type="text" id="card-date" required placeholder="ММ/ГГ" maxlength="5" class="input-fancy text-center">
+                                </div>
+                                <div class="form-group">
+                                    <label>CVC / CVV</label>
+                                    <input type="password" id="card-cvv" required placeholder="***" maxlength="3" class="input-fancy text-center">
+                                </div>
+                            </div>
+                            <button type="submit" class="pay-button">
+                                <i class="fas fa-lock"></i> Оплатить <span class="total-price-display" style="font-family: monospace;">0</span> ₽
+                            </button>
+                            <div class="trust-badge">
+                                <span><i class="fas fa-shield-alt" style="color: #1a237e;"></i> Защищено</span>
+                                <span><i class="far fa-clock"></i> 24/7 поддержка</span>
+                                <span><i class="fas fa-lock"></i> PCI DSS</span>
+                            </div>
+                        </form>
+
+                        <!-- Блок СБП -->
+                        <div id="sbp-block" class="hidden sbp-block">
+                            <div class="qr-container">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=TicketSearchSecurePay" alt="QR-код для оплаты через СБП">
+                            </div>
+                            <p style="font-size: 0.8rem; color: #666;">Отсканируйте QR-код в приложении вашего банка</p>
+                            <div class="sbp-info">
+                                <p><i class="fas fa-info-circle"></i> СБП без комиссии для пассажиров</p>
+                            </div>
+                            <button onclick="handlePayment()" class="confirm-btn">
+                                <i class="fas fa-check-circle"></i> Я оплатил (подтвердить)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- правая колонка - детали заказа -->
+            <div>
+                <div class="order-card">
+                    <div class="order-header">
+                        <p><i class="fas fa-ticket-alt"></i> Электронный билет</p>
+                    </div>
+                    <div class="order-body" id="orderSummary">
+                        <!-- динамически заполняется через js -->
+                        <div style="text-align: center; color: #999; padding: 2rem;">Загрузка...</div>
+                    </div>
+                    <div class="order-total">
+                        <span>Итого к оплате</span>
+                        <span class="total-price total-price-footer">0 ₽</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // ============= ЛОГИКА (НЕ ИЗМЕНЕНА) =============
+    // 1. Извлечение данных из хранилища
+    const orderData = JSON.parse(sessionStorage.getItem('pendingOrder'));
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    // Проверка наличия данных
+    if (!orderData) {
+        alert("Данные бронирования не найдены. Пожалуйста, начните поиск сначала.");
+        window.location.href = 'index.html';
+    }
+
+    // 2. Отображение цен и деталей заказа
+    function initPage() {
+        const price = orderData.price || 0;
+        document.querySelectorAll('.total-price-display, .total-price-footer').forEach(el => {
+            if (el.classList && el.classList.contains('total-price-display')) {
+                el.innerText = Number(price).toLocaleString('ru-RU');
+            } else {
+                el.innerText = Number(price).toLocaleString('ru-RU') + ' ₽';
+            }
+        });
+        
+        const summary = document.getElementById('orderSummary');
+        summary.innerHTML = `
+            <div class="order-detail-item">
+                <div class="order-detail-label"><i class="fas fa-route"></i> Маршрут</div>
+                <div class="order-detail-value">${orderData.route || orderData.destination || 'Не указан'}</div>
+            </div>
+            <div class="grid-2cols-order">
+                <div class="info-box">
+                    <div class="label">🚆 Поезд</div>
+                    <div class="value">${orderData.train_number || '—'}</div>
+                </div>
+                <div class="info-box">
+                    <div class="label">📅 Дата</div>
+                    <div class="value">${orderData.departure_date || '—'}</div>
+                </div>
+            </div>
+            <div class="order-detail-item">
+                <div class="order-detail-label"><i class="fas fa-user-circle"></i> Пассажир</div>
+                <div class="order-detail-value">${orderData.passenger_fio || 'Не указан'}</div>
+                ${orderData.passport_serias && orderData.passport_number ? `<div style="font-size: 0.75rem; color: #666; margin-top: 0.25rem; font-family: monospace;">${orderData.passport_serias} ${orderData.passport_number}</div>` : ''}
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+                <span class="order-detail-label"><i class="fas fa-chair"></i> Класс вагона</span>
+                <span class="route-badge">${orderData.carriage_type || 'Плацкарт'}</span>
+            </div>
+        `;
+    }
+
+    initPage();
+
+    window.switchMethod = function(method) {
+        const cardBtn = document.getElementById('btn-card');
+        const sbpBtn = document.getElementById('btn-sbp');
+        const cardForm = document.getElementById('card-form');
+        const sbpBlock = document.getElementById('sbp-block');
+        
+        if (method === 'card') {
+            cardBtn.classList.add('active');
+            sbpBtn.classList.remove('active');
+            cardForm.classList.remove('hidden');
+            sbpBlock.classList.add('hidden');
+        } else {
+            sbpBtn.classList.add('active');
+            cardBtn.classList.remove('active');
+            cardForm.classList.add('hidden');
+            sbpBlock.classList.remove('hidden');
+        }
+    };
+
+    // 3. ГЛАВНАЯ ФУНКЦИЯ ОПЛАТЫ И ОТПРАВКИ
+    window.handlePayment = async function() {
+        const isCard = !document.getElementById('card-form').classList.contains('hidden');
+        const btn = document.querySelector(isCard ? '#card-form button' : '#sbp-block button');
+        
+        const originalContent = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-circle-notch fa-spin-custom"></i> Сохранение билета...';
+
+        const finalBookingData = {
+            user_id: orderData.user_id,
+            destination: orderData.destination,
+            departure_date: orderData.departure_date,
+            train_number: orderData.train_number,
+            carriage_type: orderData.carriage_type,
+            price: orderData.price,
+            email: orderData.email,
+            passenger_fio: orderData.passenger_fio,
+            passport_serias: orderData.passport_serias,
+            passport_number: orderData.passport_number,
+            route: orderData.route
+        };
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/send-ticket', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(finalBookingData)
+            });
+
+            if (response.ok) {
+                btn.style.background = '#10b981';
+                btn.innerHTML = '<i class="fas fa-check-circle"></i> Оплачено и сохранено!';
+                setTimeout(() => {
+                    sessionStorage.removeItem('pendingOrder');
+                    alert("Успешно! Билет забронирован и отправлен на почту.");
+                    window.location.href = 'index.html';
+                }, 2000);
+            } else {
+                const err = await response.json();
+                alert("Ошибка сервера: " + (err.detail || "Не удалось сохранить"));
+                btn.disabled = false;
+                btn.innerHTML = originalContent;
+            }
+        } catch (error) {
+            console.error("Ошибка сети:", error);
+            alert("Не удалось связаться с сервером. Проверьте соединение.");
+            btn.disabled = false;
+            btn.innerHTML = originalContent;
+        }
+    };
+
+    // Валидация формы карты
+    document.getElementById('card-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const cardNum = document.getElementById('card-num').value.replace(/\s/g, '');
+        if (cardNum.length < 16) {
+            alert("Пожалуйста, введите корректный номер карты (16 цифр)");
+            return;
+        }
+        const cvv = document.getElementById('card-cvv').value;
+        if (!cvv || cvv.length < 3) {
+            alert("Пожалуйста, введите CVC код");
+            return;
+        }
+        handlePayment();
+    });
+
+    // Маски для полей
+    document.getElementById('card-num').addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, '').substring(0,16);
+        e.target.value = v.replace(/(.{4})/g, '$1 ').trim();
+    });
+
+    document.getElementById('card-date').addEventListener('input', function(e) {
+        let v = e.target.value.replace(/\D/g, '').substring(0,4);
+        if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2);
+        e.target.value = v;
+    });
+    
+    window.addEventListener('load', () => {
+        if (!orderData) return;
+        const price = orderData.price || 0;
+        document.querySelectorAll('.total-price-display, .total-price-footer').forEach(el => {
+            if (el.classList && el.classList.contains('total-price-display')) {
+                el.innerText = Number(price).toLocaleString('ru-RU');
+            } else {
+                el.innerText = Number(price).toLocaleString('ru-RU') + ' ₽';
+            }
+        });
+    });
+</script>
+</body>
+</html>
